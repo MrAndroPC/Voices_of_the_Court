@@ -100,6 +100,12 @@ export function buildChatPrompt(conv: Conversation): Message[]{
 
         
         insertMessageAtDepth(messages, summariesMessage, conv.config.summariesInsertDepth); 
+    } else {
+        let summariesMessage: Message = {
+            role: "system",
+            content: "These characters never had proper personal conversation before or are meeting for first time"
+        }
+        insertMessageAtDepth(messages, summariesMessage, conv.config.summariesInsertDepth);
     }
     
 

@@ -15,10 +15,15 @@ export class ChatWindow{
         this.window = new BrowserWindow({
             ...OVERLAY_WINDOW_OPTS,
             resizable: false,
+            transparent: true,
+            alwaysOnTop: true,
+            frame: false,
+            
             webPreferences: {
             nodeIntegration: true,
             contextIsolation: false,
-           
+            transparent: true,
+
 
             }       
         })
@@ -48,8 +53,30 @@ export class ChatWindow{
         
         console.log("Chat window opened!")
 
-        
-    }
+        ipcMain.on('collapse-window', () => {
+            clearInterval(this.interval);
+            this.window.fullScreen = false;
+            this.window.setAlwaysOnTop(true, "normal");
+            this.window.setSize(50, 50); // Small size for collapsed window
+          });
+      
+          ipcMain.on('uncollapse-window', () => {
+            this.window.fullScreen = true;
+            this.window.restore();
+            //this.window.setSize(650, 800); // Original window size
+            this.show();
+          });
+
+          ipcMain.on('activate-overlay', () => {
+            OverlayController.activateOverlay();
+            this.show();
+          });
+          
+          ipcMain.on('focus-target', () => {
+              OverlayController.focusTarget();
+          });
+
+        }
 
     show(){
         console.log("Chat window showed!");
@@ -68,18 +95,18 @@ export class ChatWindow{
                 
         })*/
 
-        this.interval = setInterval(()=>{
-            let win = ActiveWindow.getActiveWindow();
-           // console.log(win.title)
+        // this.interval = setInterval(()=>{
+        //     let win = ActiveWindow.getActiveWindow();
+        //    // console.log(win.title)
 
-            if(win.title === "Crusader Kings III" || win.title === "Voices of the Court - Chat"){
-                OverlayController.activateOverlay();
-                //this.window.webContents.send('chat-show');
-            }else{
-                this.window.minimize();
-                //this.window.webContents.send('chat-hide');
-            }
-        }, 500)
+        //     if(win.title === "Crusader Kings III" || win.title === "Voices of the Court - Chat"){
+        //         OverlayController.activateOverlay();
+        //         //this.window.webContents.send('chat-show');
+        //     }else{
+        //         this.window.minimize();
+        //         //this.window.webContents.send('chat-hide');
+        //     }
+        // }, 500)
 
         
     }

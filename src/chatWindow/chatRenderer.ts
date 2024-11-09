@@ -16,6 +16,10 @@ let chatMessages: HTMLDivElement = document.querySelector('.messages')!;
 let chatInput: HTMLInputElement= document.querySelector('.chat-input')!;
 let leaveButton: HTMLButtonElement = document.querySelector('.leave-button')!;
 let loadingDots: any;
+const collapseButton = document.getElementById('toggle-collapse')! as HTMLButtonElement;
+const chatBox = document.querySelector('.chat-box')! as HTMLDivElement;
+let isCollapsed = false;
+
 
 let playerName: string;
 let aiName: string;
@@ -135,6 +139,43 @@ leaveButton.addEventListener("click", ()=>{
     ipcRenderer.send('chat-stop');
 });
 
+
+chatBox.addEventListener('mouseenter', () => {
+    ipcRenderer.send('activate-overlay');
+  });
+  
+  // Leave event to focus target behind the overlay
+  chatBox.addEventListener('mouseleave', () => {
+    ipcRenderer.send('focus-target');
+  });
+  
+  collapseButton.addEventListener('mouseenter', () => {
+    ipcRenderer.send('activate-overlay');
+  });
+  
+  // Leave event to focus target behind the overlay
+  collapseButton.addEventListener('mouseleave', () => {
+    ipcRenderer.send('focus-target');
+  });
+
+
+collapseButton.addEventListener('click', () => {
+    if (isCollapsed) {
+      // Uncollapse window
+      ipcRenderer.send('uncollapse-window');
+      chatBox.style.display = '';
+      chatBox.style.visibility = 'visible';
+      collapseButton.textContent = '-';
+    } else {
+      // Collapse window
+      ipcRenderer.send('collapse-window');
+      chatBox.style.visibility = 'hidden';
+      chatBox.style.display = 'none';
+      collapseButton.textContent = '+';
+    }
+    isCollapsed = !isCollapsed;
+  });
+  
 //IPC Events
 
 ipcRenderer.on('chat-show', () =>{

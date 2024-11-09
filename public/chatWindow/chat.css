@@ -156,4 +156,20 @@ em{
     .5em 0 0 white;}
 }
 
+.collapse-button {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    width: 40px;
+    height: 40px;
+    background: #555;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    font-size: 12px;
+    z-index: 9999;
+  }
   
+  .collapse-button:hover {
+    background: #333;
+  }
